@@ -44,15 +44,8 @@ export default function InlineFocusSession() {
 
   return (
     <div className="vc-card h-full min-h-[560px]">
-      <h3 className="text-lg font-semibold text-white mb-4">Focus Session</h3>
-      
-      {/* 3-row grid inside the card */}
-      <div className="grid h-full gap-4
-                      grid-rows-[auto_auto_auto]
-                      sm:grid-rows-[auto_12rem_4rem]
-                      max-sm:grid-rows-[auto_auto_auto]">
-        
-        {/* Row 1: checklist + expected time + start */}
+      <div className="grid h-full gap-4 grid-rows-[auto_12rem_auto]">
+        {/* Row 1: checklist + expected mins + Start Session */}
         <div className="space-y-4">
           <div>
             <div className="vc-label mb-2">Choose tasks for this block</div>
@@ -69,7 +62,6 @@ export default function InlineFocusSession() {
                 onChange={e => setExpected(Math.max(1, Number(e.target.value)||25))}
               />
             </label>
-
             <div className="flex sm:justify-end">
               {!sessionId ? (
                 <button 
@@ -86,18 +78,18 @@ export default function InlineFocusSession() {
           </div>
         </div>
 
-        {/* Row 2: timer block (fixed height) */}
-        <div className="min-h-[12rem] h-full">
+        {/* Row 2: TIMER CONTAINER (fixed height) */}
+        <div className="rounded-xl border border-white/12 bg-white/5 h-full px-4 py-3 flex">
           {sessionId && (
-            <PomodoroTimer minutes={expected} onFinish={onTimerFinish} className="h-full" />
+            <PomodoroTimer minutes={expected} onFinish={onTimerFinish} />
           )}
         </div>
 
-        {/* Row 3: full-width Coaching Session bar */}
-        <div className="h-16 flex items-center">
+        {/* Row 3: Coaching button (inside the card) */}
+        <div className="flex justify-end">
           <Link 
             to="/coaching" 
-            className="vc-btn w-full bg-gradient-to-r from-pink-500 to-rose-500"
+            className="vc-btn"
           >
             Coaching Session
           </Link>
