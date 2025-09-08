@@ -46,17 +46,21 @@ export default function InlineFocusSession() {
     <div className="vc-card h-full min-h-[560px]">
       <h3 className="text-lg font-semibold text-white mb-4">Focus Session</h3>
       
-      {/* 3-row grid inside the card - responsive for mobile */}
-      <div className="grid grid-rows-[auto_auto_auto] lg:grid-rows-[auto_12rem_4rem] gap-4 h-full">
-        {/* Row 1 (auto): Task checklist + Expected minutes */}
+      {/* 3-row grid inside the card */}
+      <div className="grid h-full gap-4
+                      grid-rows-[auto_auto_auto]
+                      sm:grid-rows-[auto_12rem_4rem]
+                      max-sm:grid-rows-[auto_auto_auto]">
+        
+        {/* Row 1: checklist + expected time + start */}
         <div className="space-y-4">
           <div>
             <div className="vc-label mb-2">Choose tasks for this block</div>
             <TaskChecklist selected={chosen} onToggle={toggle} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 items-end gap-4">
+            <label className="block">
               <div className="vc-label">Expected time (minutes)</div>
               <input 
                 className="vc-input" 
@@ -64,8 +68,9 @@ export default function InlineFocusSession() {
                 value={expected}
                 onChange={e => setExpected(Math.max(1, Number(e.target.value)||25))}
               />
-            </div>
-            <div className="flex items-end">
+            </label>
+
+            <div className="flex sm:justify-end">
               {!sessionId ? (
                 <button 
                   className="vc-btn" 
@@ -81,18 +86,18 @@ export default function InlineFocusSession() {
           </div>
         </div>
 
-        {/* Row 2 (fixed height ~12rem on desktop, auto on mobile): Session timer area */}
-        <div className="min-h-[12rem] lg:min-h-[12rem] h-full">
+        {/* Row 2: timer block (fixed height) */}
+        <div className="min-h-[12rem] h-full">
           {sessionId && (
-            <PomodoroTimer minutes={expected} onFinish={onTimerFinish} />
+            <PomodoroTimer minutes={expected} onFinish={onTimerFinish} className="h-full" />
           )}
         </div>
 
-        {/* Row 3 (fixed height ~4rem on desktop, auto on mobile): Coaching Session button block */}
-        <div className="h-16 lg:h-16 flex items-center">
+        {/* Row 3: full-width Coaching Session bar */}
+        <div className="h-16 flex items-center">
           <Link 
             to="/coaching" 
-            className="w-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white px-4 py-3 rounded-xl font-semibold text-center hover:brightness-110 active:scale-[.99] transition-all"
+            className="vc-btn w-full bg-gradient-to-r from-pink-500 to-rose-500"
           >
             Coaching Session
           </Link>

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function PomodoroTimer({
-  minutes, onFinish
-}: { minutes: number; onFinish: () => void }) {
+  minutes, onFinish, className
+}: { minutes: number; onFinish: () => void; className?: string }) {
   const total = minutes * 60;
   const [left, setLeft] = useState<number>(() => {
     const saved = sessionStorage.getItem("focus_left");
@@ -32,7 +32,7 @@ export default function PomodoroTimer({
   const ss = String(left%60).padStart(2,"0");
 
   return (
-    <div className="rounded-2xl border border-white/12 bg-white/5 p-4 flex items-center justify-between">
+    <div className={`rounded-2xl border border-white/12 bg-white/5 p-4 flex items-center justify-between ${className || ''}`}>
       <div>
         <div className="text-sm text-white/70">Session Timer</div>
         <div className="text-3xl font-semibold">{mm}:{ss}</div>
