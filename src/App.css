@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #312e81 0%, #581c87 50%, #4c1d95 100%);
+    min-height: 100vh;
+  }
+}
+
+/* Force styling regardless of Tailwind issues */
+.gradient-bg {
+  background: linear-gradient(135deg, #312e81 0%, #581c87 50%, #4c1d95 100%) !important;
+  min-height: 100vh !important;
+}
+
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Force text colors */
+.text-white {
+  color: white !important;
+}
+
+.text-indigo-200 {
+  color: #c7d2fe !important;
+}
+
+/* Force button styling */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, #6366f1, #9333ea) !important;
+}
+
+.from-indigo-500 {
+  background: linear-gradient(to right, #6366f1, #9333ea) !important;
+}
+
+.to-purple-600 {
+  background: linear-gradient(to right, #6366f1, #9333ea) !important;
+}
