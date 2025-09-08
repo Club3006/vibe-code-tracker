@@ -79,7 +79,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
   };
 
   return (
-    <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur p-6 shadow-xl">
+    <div className="vc-card h-full min-h-[560px]">
       {/* Header Row */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold text-white">Morning Check-In — {date}</h2>

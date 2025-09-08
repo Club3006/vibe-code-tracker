@@ -30,9 +30,9 @@ export default function App() {
       <Hero date={new Date(date).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
       
       <main className="mx-auto max-w-7xl px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch gap-6">
           {/* Left side - Morning Check-In */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 h-full">
             <MorningCheckIn onSaved={async () => {
               if (!uid) return;
               const [d, s] = await Promise.all([loadDaily(uid, date), loadStreak(uid)]);
@@ -41,7 +41,7 @@ export default function App() {
           </div>
           
           {/* Right side - Focus Session */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 h-full">
             <InlineFocusSession />
           </div>
         </div>

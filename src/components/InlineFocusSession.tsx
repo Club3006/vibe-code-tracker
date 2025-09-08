@@ -42,7 +42,7 @@ export default function InlineFocusSession() {
   };
 
   return (
-    <div className="vc-card space-y-4">
+    <div className="vc-card h-full min-h-[560px] space-y-4">
       <h3 className="text-lg font-semibold text-white">Focus Session</h3>
       
       <div className="space-y-4">
