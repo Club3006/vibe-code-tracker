@@ -4,7 +4,6 @@ import { loadDaily, loadStreak, todayKey } from "./lib/firebase";
 import type { DailyRecord, StreakMeta } from "./types";
 import SidebarToday from "./components/SidebarToday";
 import MorningCheckIn from "./components/MorningCheckIn";
-import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
 
 export default function App() {
@@ -26,13 +25,7 @@ export default function App() {
   const ritualDone = !!(daily?.weight_lbs && daily?.glucose_mgdl && daily?.gym && daily?.morning_drink && daily?.meditation);
 
   return (
-    <div 
-      className="min-h-screen text-white"
-      style={{
-        background: "linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%)"
-      }}
-    >
-      <NavBar />
+    <>
       <Hero date={new Date(date).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
       
       <main className="mx-auto max-w-6xl px-6 py-6">
@@ -64,6 +57,6 @@ export default function App() {
           </p>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
