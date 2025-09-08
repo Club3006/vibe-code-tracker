@@ -79,11 +79,11 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
   };
 
   return (
-    <div className="vc-card">
+    <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur p-6 shadow-xl">
       {/* Header Row */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold text-white">Morning Check-In — {date}</h2>
-        <span className={`vc-badge ${
+        <span className={`text-xs px-2 py-1 rounded-full border ${
           form.morning_ritual_done 
             ? "bg-green-500/20 text-green-100 border-green-400/30" 
             : "text-white/70 border-white/20"
@@ -99,7 +99,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Weight (lbs)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter weight"
               value={form.weight_lbs ?? ""}
               onChange={e => setField("weight_lbs", numOrNull(e.target.value))}
@@ -110,7 +110,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Glucose (mg/dL)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter glucose level"
               value={form.glucose_mgdl ?? ""}
               onChange={e => setField("glucose_mgdl", numOrNull(e.target.value))}
@@ -143,10 +143,10 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
 
         {/* Row 3: Checking and Savings */}
         <div className="space-y-4">
-          <Field label="Checking ($)">
+          <Field label="Checking Account ($)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter checking balance"
               value={form.checking_usd ?? ""}
               onChange={e => setField("checking_usd", numOrNull(e.target.value))}
@@ -154,10 +154,10 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           </Field>
         </div>
         <div className="space-y-4">
-          <Field label="Savings ($)">
+          <Field label="Savings Account ($)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter savings balance"
               value={form.savings_usd ?? ""}
               onChange={e => setField("savings_usd", numOrNull(e.target.value))}
@@ -170,7 +170,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Pushups Goal (reps)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter pushups goal"
               value={form.pushups_goal ?? ""}
               onChange={e => setField("pushups_goal", numOrNull(e.target.value))}
@@ -181,7 +181,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Squats Goal (reps)">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter squats goal"
               value={form.squats_goal ?? ""}
               onChange={e => setField("squats_goal", numOrNull(e.target.value))}
@@ -194,7 +194,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Inbound Goal">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter inbound goal"
               value={form.inbound_goal ?? ""}
               onChange={e => setField("inbound_goal", numOrNull(e.target.value))}
@@ -205,7 +205,7 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
           <Field label="Outbound Goal">
             <input
               type="number"
-              className="vc-input"
+              className="h-11 w-full rounded-xl bg-white/10 border border-white/16 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent px-4"
               placeholder="Enter outbound goal"
               value={form.outbound_goal ?? ""}
               onChange={e => setField("outbound_goal", numOrNull(e.target.value))}
@@ -215,11 +215,11 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
       </div>
 
       {/* Save Button */}
-      <div className="pt-6">
+      <div className="pt-4">
         <button
           onClick={save}
           disabled={saving}
-          className="vc-btn"
+          className="rounded-xl px-4 py-3 font-semibold bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white shadow hover:brightness-110 active:scale-[.99] disabled:opacity-50"
         >
           {saving ? "Saving..." : "Save Morning Check-In"}
         </button>
@@ -231,7 +231,9 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="vc-label">{label}</div>
+      <label className="block text-[13px] font-medium text-white/80 mb-2">
+        {label}
+      </label>
       {children}
     </div>
   );
@@ -242,7 +244,7 @@ function CheckboxField({ label, checked, onChange }: { label: string; checked: b
     <label className="flex items-center gap-2">
       <input
         type="checkbox"
-        className="vc-check"
+        className="h-5 w-5 text-green-400 bg-white/10 border-white/20 rounded focus:ring-green-300"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
       />
