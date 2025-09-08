@@ -4,6 +4,7 @@ import { loadDaily, loadStreak, todayKey } from "./lib/firebase";
 import type { DailyRecord, StreakMeta } from "./types";
 import SidebarToday from "./components/SidebarToday";
 import MorningCheckIn from "./components/MorningCheckIn";
+import InlineFocusSession from "./components/InlineFocusSession";
 import Hero from "./components/Hero";
 
 export default function App() {
@@ -28,17 +29,26 @@ export default function App() {
     <>
       <Hero date={new Date(date).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
       
-      <main className="mx-auto max-w-6xl px-6 py-6">
+      <main className="mx-auto max-w-7xl px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8">
-            {/* Give MorningCheckIn a way to notify App after save */}
+          {/* Left side - Morning Check-In */}
+          <div className="lg:col-span-6">
             <MorningCheckIn onSaved={async () => {
               if (!uid) return;
               const [d, s] = await Promise.all([loadDaily(uid, date), loadStreak(uid)]);
               setDaily(d); setStreak(s);
             }} />
           </div>
-          <div className="lg:col-span-4">
+          
+          {/* Right side - Focus Session */}
+          <div className="lg:col-span-6">
+            <InlineFocusSession />
+          </div>
+        </div>
+        
+        {/* Bottom row - Sidebar */}
+        <div className="mt-6">
+          <div className="max-w-2xl mx-auto">
             <SidebarToday
               streakCurrent={streak?.current_streak ?? 0}
               streakBest={streak?.best_streak ?? 0}

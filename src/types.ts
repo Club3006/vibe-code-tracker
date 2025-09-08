@@ -11,6 +11,8 @@ export interface DailyRecord {
   squats_goal: number | null;
   pushups_done: number;
   squats_done: number;
+  inbound_goal: number | null;
+  outbound_goal: number | null;
   inbound_done: number;
   outbound_done: number;
   morning_ritual_done: boolean;
