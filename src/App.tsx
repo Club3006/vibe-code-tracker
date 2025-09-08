@@ -30,9 +30,9 @@ export default function App() {
       <Hero date={new Date(date).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
       
       <main className="mx-auto max-w-7xl px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch gap-6">
+        <div className="grid grid-cols-12 gap-6 items-stretch">
           {/* Left side - Morning Check-In */}
-          <div className="lg:col-span-6 h-full">
+          <div className="col-span-12 lg:col-span-6 h-full">
             <MorningCheckIn onSaved={async () => {
               if (!uid) return;
               const [d, s] = await Promise.all([loadDaily(uid, date), loadStreak(uid)]);
@@ -41,20 +41,20 @@ export default function App() {
           </div>
           
           {/* Right side - Focus Session */}
-          <div className="lg:col-span-6 h-full">
+          <div className="col-span-12 lg:col-span-6 h-full">
             <InlineFocusSession />
           </div>
-        </div>
-        
-        {/* Bottom row - Sidebar */}
-        <div className="mt-6">
-          <div className="max-w-2xl mx-auto">
+          
+          {/* Dashboard card - full width */}
+          <div className="col-span-12">
             <SidebarToday
               streakCurrent={streak?.current_streak ?? 0}
               streakBest={streak?.best_streak ?? 0}
               ritualDone={ritualDone}
               pushups={{ done: daily?.pushups_done ?? 0, goal: daily?.pushups_goal ?? null }}
               squats={{ done: daily?.squats_done ?? 0, goal: daily?.squats_goal ?? null }}
+              inbounds={{ done: daily?.inbound_done ?? 0, goal: daily?.inbound_goal ?? null }}
+              outbounds={{ done: daily?.outbound_done ?? 0, goal: daily?.outbound_goal ?? null }}
             />
           </div>
         </div>

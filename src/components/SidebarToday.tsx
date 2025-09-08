@@ -4,56 +4,69 @@ interface SidebarTodayProps {
   ritualDone: boolean;
   pushups: { done: number; goal: number | null };
   squats: { done: number; goal: number | null };
+  inbounds: { done: number; goal: number | null };
+  outbounds: { done: number; goal: number | null };
 }
 
-export default function SidebarToday({ streakCurrent, streakBest, ritualDone, pushups, squats }: SidebarTodayProps) {
+export default function SidebarToday({ streakCurrent, streakBest, ritualDone, pushups, squats, inbounds, outbounds }: SidebarTodayProps) {
   return (
-    <aside className="sticky top-6 space-y-6">
-      {/* Card A: Morning Ritual Status */}
-      <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur p-4 shadow">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-medium text-white">Morning Ritual</h3>
-          <span className={`text-xs px-2 py-1 rounded-full border ${
-            ritualDone 
-              ? "bg-green-500/20 text-green-100 border-green-400/30" 
-              : "text-white/70 border-white/20"
-          }`}>
-            {ritualDone ? "✓ Complete" : "Not Complete"}
-          </span>
+    <div className="vc-card min-h-[260px]">
+      {/* 2-row grid inside the dashboard card */}
+      <div className="grid grid-rows-[auto_auto] gap-6 h-full">
+        {/* Row A: Streak band */}
+        <div className="grid grid-cols-[auto_auto_1fr] items-center gap-4">
+          {/* Streak chips */}
+          <div className="flex gap-2">
+            <span className="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white text-sm font-medium">
+              Streak: {streakCurrent}
+            </span>
+            <span className="px-3 py-1 rounded-full border border-white/20 text-white/80 text-sm">
+              Best: {streakBest}
+            </span>
+          </div>
+          
+          {/* Ritual progress ring (right aligned) */}
+          <div className="flex justify-end">
+            <div className="w-16 h-16 rounded-full border-4 border-white/20 flex items-center justify-center">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                ritualDone 
+                  ? "bg-green-500/20 border-2 border-green-400/30" 
+                  : "bg-white/5 border-2 border-white/20"
+              }`}>
+                <span className="text-lg">{ritualDone ? "✓" : "○"}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="text-sm text-white/80">
-          Streak: <span className="font-semibold">{streakCurrent}</span> • Best: <span className="font-semibold">{streakBest}</span>
-        </p>
-      </div>
 
-      {/* Card B: Today's Snapshot */}
-      <div className="rounded-2xl border border-white/12 bg-white/5 backdrop-blur p-4 shadow">
-        <h3 className="font-medium text-white mb-3">Today's Snapshot</h3>
-        <div className="space-y-3">
-          <KpiRow label="Pushups" done={pushups.done} goal={pushups.goal} />
-          <KpiRow label="Squats" done={squats.done} goal={squats.goal} />
+        {/* Row B: Four gauges row */}
+        <div className="grid grid-cols-4 gap-4">
+          <Gauge label="Pushups" done={pushups.done} goal={pushups.goal} />
+          <Gauge label="Squats" done={squats.done} goal={squats.goal} />
+          <Gauge label="Inbounds" done={inbounds.done} goal={inbounds.goal} />
+          <Gauge label="Outbounds" done={outbounds.done} goal={outbounds.goal} />
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
 
-function KpiRow({ label, done, goal }: { label: string; done: number; goal: number | null }) {
+function Gauge({ label, done, goal }: { label: string; done: number; goal: number | null }) {
   const percentage = goal && goal > 0 ? Math.min(100, Math.round((done / goal) * 100)) : null;
   
   return (
-    <div className="flex items-center justify-between">
-      <span className="text-sm text-white/80">{label}</span>
-      <span className="text-sm text-white">
+    <div className="text-center">
+      <div className="text-xs text-white/60 mb-1">{label}</div>
+      <div className="text-lg font-semibold text-white">
         {goal ? (
           <>
-            {done} / {goal} 
-            <span className="text-white/60 ml-1">({percentage}%)</span>
+            {done} / {goal}
+            <div className="text-xs text-white/60 mt-1">{percentage}%</div>
           </>
         ) : (
           done
         )}
-      </span>
+      </div>
     </div>
   );
 }
