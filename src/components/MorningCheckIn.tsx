@@ -25,6 +25,8 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
     morning_ritual_done: false
   }));
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -35,8 +37,12 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
     })();
   }, [date]);
 
-  const setField = <K extends keyof DailyRecord>(k: K, v: DailyRecord[K]) => 
+  const setField = <K extends keyof DailyRecord>(k: K, v: DailyRecord[K]) => {
     setForm(f => ({ ...f, [k]: v }));
+    // Reset saved state when form changes
+    if (saved) setSaved(false);
+    if (error) setError(null);
+  };
 
   const ritualComplete = (f: DailyRecord) =>
     !!f.weight_lbs && !!f.glucose_mgdl && f.gym && f.morning_drink && f.meditation;
@@ -44,33 +50,47 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
   const save = async () => {
     if (!uid) return;
     setSaving(true);
-    const done = ritualComplete(form);
+    setError(null);
+    setSaved(false);
+    
+    try {
+      const done = ritualComplete(form);
 
-    // 1) save daily with ritual flag
-    await saveDaily(uid, date, { ...form, morning_ritual_done: done });
+      // 1) save daily with ritual flag
+      await saveDaily(uid, date, { ...form, morning_ritual_done: done });
 
-    // 2) update streak
-    const meta = await loadStreak(uid);
-    const y = new Date(date); y.setDate(y.getDate() - 1);
-    const yesterday = y.toISOString().slice(0, 10);
+      // 2) update streak
+      const meta = await loadStreak(uid);
+      const y = new Date(date); y.setDate(y.getDate() - 1);
+      const yesterday = y.toISOString().slice(0, 10);
 
-    let current = meta.current_streak;
-    let best = meta.best_streak;
-    let last = meta.last_ritual_date;
+      let current = meta.current_streak;
+      let best = meta.best_streak;
+      let last = meta.last_ritual_date;
 
-    if (done) {
-      const cont = (last === yesterday);
-      current = cont ? (current + 1) : 1;
-      best = Math.max(best, current);
-      last = date;
-    } else {
-      current = 0; // break streak if ritual not complete
-      // keep last as-is
+      if (done) {
+        const cont = (last === yesterday);
+        current = cont ? (current + 1) : 1;
+        best = Math.max(best, current);
+        last = date;
+      } else {
+        current = 0; // break streak if ritual not complete
+        // keep last as-is
+      }
+      await saveStreak(uid, { current_streak: current, best_streak: best, last_ritual_date: last });
+
+      onSaved?.();
+      setSaved(true);
+      
+      // Reset saved state after 3 seconds
+      setTimeout(() => setSaved(false), 3000);
+      
+    } catch (err) {
+      console.error('Save error:', err);
+      setError('Failed to save. Please try again.');
+    } finally {
+      setSaving(false);
     }
-    await saveStreak(uid, { current_streak: current, best_streak: best, last_ritual_date: last });
-
-    onSaved?.();
-    setSaving(false);
   };
 
   const numOrNull = (v: string) => {
@@ -215,14 +235,23 @@ export default function MorningCheckIn({ onSaved }: { onSaved?: () => void }) {
       </div>
 
       {/* Save Button */}
-      <div className="pt-4">
+      <div className="pt-4 space-y-2">
         <button
           onClick={save}
           disabled={saving}
-          className="rounded-xl px-4 py-3 font-semibold bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white shadow hover:brightness-110 active:scale-[.99] disabled:opacity-50"
+          className={`rounded-xl px-4 py-3 font-semibold text-white shadow transition-all duration-200 ${
+            saved 
+              ? "bg-green-500 hover:bg-green-600" 
+              : "bg-gradient-to-r from-indigo-500 to-fuchsia-500 hover:brightness-110"
+          } active:scale-[.99] disabled:opacity-50`}
         >
-          {saving ? "Saving..." : "Save Morning Check-In"}
+          {saving ? "Saving..." : saved ? "✓ Saved!" : "Save Morning Check-In"}
         </button>
+        {error && (
+          <div className="text-red-400 text-sm">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );
