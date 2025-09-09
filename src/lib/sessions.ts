@@ -62,6 +62,7 @@ export async function finalizeSession(uid: string, date: string, id: string, res
     if (result.squats_done)       agg.squats_done   = (result.squats_done);
 
     console.log('📊 Aggregating daily data:', agg);
+    console.log('📊 Full result object:', result);
     
     // increment-style: read-modify-merge would be ideal; for MVP, set latest totals
     await setDoc(dailyRef(uid, date), agg, { merge: true });

@@ -30,7 +30,7 @@ export default function SessionSummary({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4">
-      <div className="vc-card w-full max-w-lg border-indigo-400/30 bg-indigo-500/10">
+      <div className="vc-card w-full max-w-lg border-2 border-indigo-400/50 bg-indigo-500/20 shadow-indigo-500/20 shadow-2xl">
         <h3 className="vc-h2">Session Summary</h3>
         <p className="vc-help mb-3">Mark results for this focus block.</p>
 
@@ -74,7 +74,18 @@ export default function SessionSummary({
           <button className="vc-badge" onClick={onClose}>Cancel</button>
           <button
             className="vc-btn"
-            onClick={() => onSubmit({ completed: yn, counts: { inbounds: inb, outbounds: outb }, actual_minutes: Number(actual) || 0, pushups_done: Number(pushups) || 0, squats_done: Number(squats) || 0 })}
+            onClick={() => {
+              const result = { 
+                completed: yn, 
+                counts: { inbounds: inb, outbounds: outb }, 
+                actual_minutes: Number(actual) || 0, 
+                pushups_done: Number(pushups) || 0, 
+                squats_done: Number(squats) || 0 
+              };
+              console.log('💾 SessionSummary submitting:', result);
+              console.log('💾 Raw input values:', { actual, pushups, squats });
+              onSubmit(result);
+            }}
           >Save Session</button>
         </div>
       </div>
