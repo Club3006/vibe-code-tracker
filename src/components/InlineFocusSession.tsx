@@ -10,7 +10,7 @@ export default function InlineFocusSession() {
   const [uid, setUid] = useState<string>("");
   const [date] = useState(todayKey());
   const [chosen, setChosen] = useState<TaskKey[]>([]);
-  const [expected, setExpected] = useState<number>(25);
+  const [expected, setExpected] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
 
@@ -82,7 +82,7 @@ export default function InlineFocusSession() {
                 className="vc-input text-white" 
                 type="number" 
                 value={expected}
-                onChange={e => setExpected(Math.max(1, Number(e.target.value)||25))}
+                onChange={e => setExpected(Math.max(0, Number(e.target.value)||0))}
               />
             </label>
             <div className="flex sm:justify-end">
@@ -90,7 +90,7 @@ export default function InlineFocusSession() {
                 <button 
                   className="vc-btn" 
                   onClick={start} 
-                  disabled={!chosen.length}
+                  disabled={!chosen.length || expected <= 0}
                 >
                   Start Session
                 </button>

@@ -54,8 +54,14 @@ export default function SessionSummary({
             return null;
           })}
           <div className="grid grid-cols-2 gap-4">
-            <NumberStepper label="Pushups Done" value={pushups} onChange={setPushups} />
-            <NumberStepper label="Squats Done" value={squats} onChange={setSquats} />
+            <label className="block">
+              <div className="vc-label">Pushups Done</div>
+              <input className="vc-input text-white" type="number" value={pushups} onChange={e => setPushups(Math.max(0, Number(e.target.value)||0))} />
+            </label>
+            <label className="block">
+              <div className="vc-label">Squats Done</div>
+              <input className="vc-input text-white" type="number" value={squats} onChange={e => setSquats(Math.max(0, Number(e.target.value)||0))} />
+            </label>
           </div>
           <label className="block">
             <div className="vc-label">Actual time (minutes)</div>
