@@ -11,7 +11,7 @@ export type SummaryResult = {
 };
 
 export default function SessionSummary({
-  open, chosen, expected, onClose, onSubmit
+  open, chosen, onClose, onSubmit
 }: {
   open: boolean;
   chosen: TaskKey[];
@@ -19,18 +19,18 @@ export default function SessionSummary({
   onClose: () => void;
   onSubmit: (r: SummaryResult) => void;
 }) {
-  const [actual, setActual] = useState(expected);
+  const [actual, setActual] = useState("");
   const [yn, setYn] = useState<Partial<Record<TaskKey, boolean>>>({});
   const [inb, setInb] = useState(0);
   const [outb, setOutb] = useState(0);
-  const [pushups, setPushups] = useState(0);
-  const [squats, setSquats] = useState(0);
+  const [pushups, setPushups] = useState("");
+  const [squats, setSquats] = useState("");
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4">
-      <div className="vc-card w-full max-w-lg">
+      <div className="vc-card w-full max-w-lg border-indigo-400/30 bg-indigo-500/10">
         <h3 className="vc-h2">Session Summary</h3>
         <p className="vc-help mb-3">Mark results for this focus block.</p>
 
@@ -56,17 +56,17 @@ export default function SessionSummary({
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
               <div className="vc-label">Pushups Done</div>
-              <input className="vc-input text-white" type="number" value={pushups} onChange={e => setPushups(Math.max(0, Number(e.target.value)||0))} />
+              <input className="vc-input text-white" type="text" placeholder="Enter count" value={pushups} onChange={e => setPushups(e.target.value)} />
             </label>
             <label className="block">
               <div className="vc-label">Squats Done</div>
-              <input className="vc-input text-white" type="number" value={squats} onChange={e => setSquats(Math.max(0, Number(e.target.value)||0))} />
+              <input className="vc-input text-white" type="text" placeholder="Enter count" value={squats} onChange={e => setSquats(e.target.value)} />
             </label>
           </div>
           <label className="block">
             <div className="vc-label">Actual time (minutes)</div>
-            <input className="vc-input" type="number" value={actual}
-                   onChange={e => setActual(Math.max(0, Number(e.target.value)||0))}/>
+            <input className="vc-input text-white" type="text" placeholder="Enter minutes" value={actual}
+                   onChange={e => setActual(e.target.value)}/>
           </label>
         </div>
 
@@ -74,7 +74,7 @@ export default function SessionSummary({
           <button className="vc-badge" onClick={onClose}>Cancel</button>
           <button
             className="vc-btn"
-            onClick={() => onSubmit({ completed: yn, counts: { inbounds: inb, outbounds: outb }, actual_minutes: actual, pushups_done: pushups, squats_done: squats })}
+            onClick={() => onSubmit({ completed: yn, counts: { inbounds: inb, outbounds: outb }, actual_minutes: Number(actual) || 0, pushups_done: Number(pushups) || 0, squats_done: Number(squats) || 0 })}
           >Save Session</button>
         </div>
       </div>
