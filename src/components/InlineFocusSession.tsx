@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { ensureAnonAuth } from "../lib/firebase";
 import { todayKey } from "../lib/firebase";
 import { type TaskKey, createSession, finalizeSession } from "../lib/sessions";
@@ -48,7 +47,7 @@ export default function InlineFocusSession() {
         {/* Row 1: checklist + expected mins + Start Session */}
         <div className="space-y-4">
           <div>
-            <div className="vc-label mb-2">Choose tasks for this block</div>
+            <div className="vc-label mb-2">🔥 Choose tasks for this block 🔥</div>
             <TaskChecklist selected={chosen} onToggle={toggle} />
           </div>
 
@@ -87,12 +86,12 @@ export default function InlineFocusSession() {
 
         {/* Row 3: Coaching button (inside the card) */}
         <div className="flex justify-end">
-          <Link 
-            to="/coaching" 
+          <button
             className="vc-btn"
+            onClick={() => window.location.href = '/coaching'}
           >
             Coaching Session
-          </Link>
+          </button>
         </div>
       </div>
 
