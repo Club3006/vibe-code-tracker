@@ -20,23 +20,45 @@ export default function InlineFocusSession() {
     setChosen(prev => prev.includes(k) ? prev.filter(x => x !== k) : [...prev, k]);
 
   const start = async () => {
-    const id = await createSession(uid, date, {
-      uid, date, chosen, expected_minutes: expected, started_at: Date.now()
-    });
-    setSessionId(id);
+    console.log('🚀 Starting session with:', { uid, date, chosen, expected_minutes: expected });
+    try {
+      const id = await createSession(uid, date, {
+        uid, date, chosen, expected_minutes: expected, started_at: Date.now()
+      });
+      console.log('✅ Session created with ID:', id);
+      setSessionId(id);
+    } catch (error) {
+      console.error('❌ Error creating session:', error);
+    }
   };
 
   const onTimerFinish = () => setShowSummary(true);
 
   const saveResults = async (r: SummaryResult) => {
-    if (!sessionId) return;
-    await finalizeSession(uid, date, sessionId, {
-      completed: r.completed,
-      counts: r.counts,
-      actual_minutes: r.actual_minutes,
-      pushups_done: r.pushups_done,
-      squats_done: r.squats_done
-    });
+    console.log('🎯 saveResults called with:', r);
+    console.log('🎯 sessionId:', sessionId);
+    console.log('🎯 uid:', uid);
+    console.log('🎯 date:', date);
+    
+    if (!sessionId) {
+      console.error('❌ No sessionId - cannot save results');
+      return;
+    }
+    
+    try {
+      console.log('💾 Calling finalizeSession...');
+      await finalizeSession(uid, date, sessionId, {
+        completed: r.completed,
+        counts: r.counts,
+        actual_minutes: r.actual_minutes,
+        pushups_done: r.pushups_done,
+        squats_done: r.squats_done
+      });
+      console.log('✅ finalizeSession completed successfully');
+    } catch (error) {
+      console.error('❌ Error in finalizeSession:', error);
+    }
+    
     setShowSummary(false);
     // Reset for next session
     setSessionId(null);

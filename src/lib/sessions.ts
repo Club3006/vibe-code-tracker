@@ -37,23 +37,38 @@ export async function createSession(uid: string, date: string, s: Omit<Session,"
 }
 
 export async function finalizeSession(uid: string, date: string, id: string, result: Partial<Session>) {
-  const ref = doc(db, "users", uid, "sessions", date, "blocks", id);
-  await setDoc(ref, {
-    ...result,
-    finished_at: Timestamp.now(),
-  }, { merge: true });
+  console.log('🎯 finalizeSession called with:', { uid, date, id, result });
+  
+  try {
+    const ref = doc(db, "users", uid, "sessions", date, "blocks", id);
+    console.log('💾 Saving session data to:', ref.path);
+    
+    await setDoc(ref, {
+      ...result,
+      finished_at: Timestamp.now(),
+    }, { merge: true });
+    
+    console.log('✅ Session data saved successfully');
 
-  // Aggregate into today's doc
-  const agg: any = {};
-  if (result.completed?.loans)  agg.done_loans = true;
-  if (result.completed?.quotes) agg.done_quotes_forms_apps = true;
-  if (result.completed?.emails) agg.done_emails_calls_texts = true;
+    // Aggregate into today's doc
+    const agg: any = {};
+    if (result.completed?.loans)  agg.done_loans = true;
+    if (result.completed?.quotes) agg.done_quotes_forms_apps = true;
+    if (result.completed?.emails) agg.done_emails_calls_texts = true;
 
-  if (result.counts?.inbounds)  agg.inbound_done  = (result.counts.inbounds);
-  if (result.counts?.outbounds) agg.outbound_done = (result.counts.outbounds);
-  if (result.pushups_done)      agg.pushups_done  = (result.pushups_done);
-  if (result.squats_done)       agg.squats_done   = (result.squats_done);
+    if (result.counts?.inbounds)  agg.inbound_done  = (result.counts.inbounds);
+    if (result.counts?.outbounds) agg.outbound_done = (result.counts.outbounds);
+    if (result.pushups_done)      agg.pushups_done  = (result.pushups_done);
+    if (result.squats_done)       agg.squats_done   = (result.squats_done);
 
-  // increment-style: read-modify-merge would be ideal; for MVP, set latest totals
-  await setDoc(dailyRef(uid, date), agg, { merge: true });
+    console.log('📊 Aggregating daily data:', agg);
+    
+    // increment-style: read-modify-merge would be ideal; for MVP, set latest totals
+    await setDoc(dailyRef(uid, date), agg, { merge: true });
+    console.log('✅ Daily data aggregated successfully');
+    
+  } catch (error) {
+    console.error('❌ Error in finalizeSession:', error);
+    throw error;
+  }
 }
