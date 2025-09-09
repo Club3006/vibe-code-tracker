@@ -10,7 +10,7 @@ export default function InlineFocusSession() {
   const [uid, setUid] = useState<string>("");
   const [date] = useState(todayKey());
   const [chosen, setChosen] = useState<TaskKey[]>([]);
-  const [expected, setExpected] = useState<number>(0);
+  const [expected, setExpected] = useState<string>("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
 
@@ -23,7 +23,7 @@ export default function InlineFocusSession() {
     console.log('🚀 Starting session with:', { uid, date, chosen, expected_minutes: expected });
     try {
       const id = await createSession(uid, date, {
-        uid, date, chosen, expected_minutes: expected, started_at: Date.now()
+        uid, date, chosen, expected_minutes: Number(expected), started_at: Date.now()
       });
       console.log('✅ Session created with ID:', id);
       setSessionId(id);
@@ -80,9 +80,10 @@ export default function InlineFocusSession() {
               <div className="vc-label">Expected time (minutes)</div>
               <input 
                 className="vc-input text-white" 
-                type="number" 
+                type="text" 
+                placeholder="Enter minutes"
                 value={expected}
-                onChange={e => setExpected(Math.max(0, Number(e.target.value)||0))}
+                onChange={e => setExpected(e.target.value)}
               />
             </label>
             <div className="flex sm:justify-end">
@@ -90,7 +91,7 @@ export default function InlineFocusSession() {
                 <button 
                   className="vc-btn" 
                   onClick={start} 
-                  disabled={!chosen.length || expected <= 0}
+                  disabled={!chosen.length || !expected || Number(expected) <= 0}
                 >
                   Start Session
                 </button>
@@ -104,7 +105,7 @@ export default function InlineFocusSession() {
         {/* Row 2: TIMER CONTAINER (fixed height) */}
         <div className="rounded-xl border border-white/12 bg-white/5 h-full px-4 py-3 flex">
           {sessionId && (
-            <PomodoroTimer minutes={expected} onFinish={onTimerFinish} />
+            <PomodoroTimer minutes={Number(expected)} onFinish={onTimerFinish} />
           )}
         </div>
 
@@ -122,7 +123,7 @@ export default function InlineFocusSession() {
       <SessionSummary
         open={showSummary}
         chosen={chosen}
-        expected={expected}
+        expected={Number(expected)}
         onClose={() => setShowSummary(false)}
         onSubmit={saveResults}
       />
