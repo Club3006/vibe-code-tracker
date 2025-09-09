@@ -4,6 +4,7 @@ import FocusSession from "./routes/FocusSession";
 import UpdateCheckIn from "./routes/UpdateCheckIn";
 import Coaching from "./routes/Coaching";
 import History from "./routes/History";
+import DataReset from "./components/DataReset";
 import NavBar from "./components/NavBar";
 
 function Layout() {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: "/focus", element: <FocusSession /> },   // Focus Session
       { path: "/coaching", element: <Coaching /> },    // Coaching Session
       { path: "/history", element: <History /> },      // History
+      { path: "/reset", element: <DataReset /> },      // Data Reset
     ],
   },
 ]);

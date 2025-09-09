@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset All Data</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #1a1a1a; 
+            color: white; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .container { 
+            background: #2a2a2a; 
+            padding: 20px; 
+            border-radius: 10px; 
+            border: 2px solid #ff4444; 
+        }
+        button { 
+            background: #ff4444; 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin: 10px 0; 
+        }
+        button:hover { background: #ff6666; }
+        .warning { 
+            background: #ff4444; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 20px 0; 
+            font-weight: bold; 
+        }
+        .success { 
+            background: #44ff44; 
+            color: black; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 20px 0; 
+        }
+        pre { 
+            background: #333; 
+            padding: 10px; 
+            border-radius: 5px; 
+            overflow-x: auto; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Reset All Data</h1>
+        
+        <div class="warning">
+            ⚠️ WARNING: This will permanently delete ALL your data including:
+            <ul>
+                <li>All daily check-in records</li>
+                <li>All focus session data</li>
+                <li>All streak information</li>
+                <li>All progress tracking</li>
+            </ul>
+            This action cannot be undone!
+        </div>
+        
+        <button onclick="resetData()">🗑️ RESET ALL DATA</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, doc, deleteDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq",
+            authDomain: "perfect-day-1eb92.firebaseapp.com",
+            projectId: "perfect-day-1eb92",
+            storageBucket: "perfect-day-1eb92.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.resetData = async function() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>🔄 Starting data reset...</p>';
+            
+            try {
+                // Get all users
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                console.log(`Found ${usersSnapshot.size} user(s)`);
+                resultsDiv.innerHTML += `<p>Found ${usersSnapshot.size} user(s)</p>`;
+                
+                for (const userDoc of usersSnapshot.docs) {
+                    const userId = userDoc.id;
+                    console.log(`Resetting data for user: ${userId}`);
+                    resultsDiv.innerHTML += `<p>🗑️ Resetting data for user: ${userId}</p>`;
+                    
+                    // Delete daily records
+                    const dailySnapshot = await getDocs(collection(db, 'users', userId, 'dailyRecords'));
+                    console.log(`Found ${dailySnapshot.size} daily records`);
+                    resultsDiv.innerHTML += `<p>Found ${dailySnapshot.size} daily records</p>`;
+                    
+                    const batch = writeBatch(db);
+                    
+                    for (const dailyDoc of dailySnapshot.docs) {
+                        batch.delete(dailyDoc.ref);
+                        console.log(`Deleting daily record: ${dailyDoc.id}`);
+                        resultsDiv.innerHTML += `<p>  - Deleting daily record: ${dailyDoc.id}</p>`;
+                    }
+                    
+                    // Delete streak data
+                    const streakRef = doc(db, 'users', userId, 'meta', 'streak');
+                    batch.delete(streakRef);
+                    console.log('Deleting streak data');
+                    resultsDiv.innerHTML += `<p>  - Deleting streak data</p>`;
+                    
+                    // Delete all session data
+                    const sessionsSnapshot = await getDocs(collection(db, 'users', userId, 'sessions'));
+                    console.log(`Found ${sessionsSnapshot.size} session date(s)`);
+                    resultsDiv.innerHTML += `<p>Found ${sessionsSnapshot.size} session date(s)</p>`;
+                    
+                    for (const sessionDateDoc of sessionsSnapshot.docs) {
+                        const dateId = sessionDateDoc.id;
+                        console.log(`Deleting sessions for date: ${dateId}`);
+                        resultsDiv.innerHTML += `<p>  - Deleting sessions for date: ${dateId}</p>`;
+                        
+                        const blocksSnapshot = await getDocs(collection(db, 'users', userId, 'sessions', dateId, 'blocks'));
+                        for (const blockDoc of blocksSnapshot.docs) {
+                            batch.delete(blockDoc.ref);
+                            console.log(`Deleting session block: ${blockDoc.id}`);
+                            resultsDiv.innerHTML += `<p>    - Deleting session block: ${blockDoc.id}</p>`;
+                        }
+                        
+                        // Delete the date collection itself
+                        batch.delete(sessionDateDoc.ref);
+                    }
+                    
+                    // Commit all deletions
+                    await batch.commit();
+                    console.log(`All data deleted for user: ${userId}`);
+                    resultsDiv.innerHTML += `<p>✅ All data deleted for user: ${userId}</p>`;
+                }
+                
+                resultsDiv.innerHTML += '<div class="success"><h2>🎉 Data reset complete!</h2><p>All Firebase data has been cleared. You can now start fresh with your focus sessions and daily check-ins.</p></div>';
+                
+            } catch (error) {
+                console.error('Error during data reset:', error);
+                resultsDiv.innerHTML += `<p style="color: #ff4444;">❌ Error during data reset: ${error.message}</p>`;
+            }
+        };
+    </script>
+</body>
+</html>
