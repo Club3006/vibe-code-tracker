@@ -27,10 +27,7 @@ export default function App() {
 
   return (
     <>
-      <div className="bg-yellow-400 text-black text-center py-4 font-bold text-xl">
-        🚨 TEST BANNER - IF YOU SEE THIS, THE SITE IS UPDATING! 🚨
-      </div>
-      <Hero date={new Date(date).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
+      <Hero date="Tuesday, September 9, 2025" />
       
       <main className="mx-auto max-w-7xl px-6 py-6">
         <div className="grid grid-cols-12 gap-6 items-stretch">

@@ -41,9 +41,9 @@ export default function PomodoroTimer({
         {!running ? (
           <button className="vc-btn" onClick={() => setRunning(true)}>Start</button>
         ) : (
-          <button className="vc-badge" onClick={() => setRunning(false)}>Pause</button>
+          <button className="vc-btn" onClick={() => setRunning(false)}>Pause</button>
         )}
-        <button className="vc-badge" onClick={() => { setLeft(total); setRunning(false); }}>Reset</button>
+        <button className="vc-btn" onClick={() => { setLeft(0); setRunning(false); onFinish(); }}>End</button>
       </div>
       <audio ref={audioRef} src="/chime.mp3" preload="auto" />
     </div>

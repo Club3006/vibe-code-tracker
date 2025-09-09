@@ -42,12 +42,12 @@ export default function InlineFocusSession() {
   };
 
   return (
-    <div className="vc-card h-full min-h-[560px] bg-red-500">
+    <div className="vc-card h-full min-h-[560px]">
       <div className="grid h-full gap-4 grid-rows-[auto_12rem_auto]">
         {/* Row 1: checklist + expected mins + Start Session */}
         <div className="space-y-4">
           <div>
-            <div className="vc-label mb-2">🔥 Choose tasks for this block 🔥</div>
+            <div className="vc-label mb-2">Choose tasks for this block</div>
             <TaskChecklist selected={chosen} onToggle={toggle} />
           </div>
 
@@ -55,7 +55,7 @@ export default function InlineFocusSession() {
             <label className="block">
               <div className="vc-label">Expected time (minutes)</div>
               <input 
-                className="vc-input" 
+                className="vc-input text-white" 
                 type="number" 
                 value={expected}
                 onChange={e => setExpected(Math.max(1, Number(e.target.value)||25))}
