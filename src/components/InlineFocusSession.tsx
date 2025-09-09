@@ -42,7 +42,7 @@ export default function InlineFocusSession() {
   };
 
   return (
-    <div className="vc-card h-full min-h-[560px]">
+    <div className="vc-card h-full min-h-[560px] bg-red-500">
       <div className="grid h-full gap-4 grid-rows-[auto_12rem_auto]">
         {/* Row 1: checklist + expected mins + Start Session */}
         <div className="space-y-4">
