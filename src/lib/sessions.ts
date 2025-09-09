@@ -22,6 +22,8 @@ export type Session = {
   completed?: Partial<Record<TaskKey, boolean>>;
   counts?:     Partial<Record<"inbounds"|"outbounds", number>>;
   actual_minutes?: number;
+  pushups_done?: number;
+  squats_done?: number;
 };
 
 export async function createSession(uid: string, date: string, s: Omit<Session,"id">) {
@@ -49,6 +51,8 @@ export async function finalizeSession(uid: string, date: string, id: string, res
 
   if (result.counts?.inbounds)  agg.inbound_done  = (result.counts.inbounds);
   if (result.counts?.outbounds) agg.outbound_done = (result.counts.outbounds);
+  if (result.pushups_done)      agg.pushups_done  = (result.pushups_done);
+  if (result.squats_done)       agg.squats_done   = (result.squats_done);
 
   // increment-style: read-modify-merge would be ideal; for MVP, set latest totals
   await setDoc(dailyRef(uid, date), agg, { merge: true });

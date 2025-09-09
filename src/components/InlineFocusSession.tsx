@@ -33,7 +33,9 @@ export default function InlineFocusSession() {
     await finalizeSession(uid, date, sessionId, {
       completed: r.completed,
       counts: r.counts,
-      actual_minutes: r.actual_minutes
+      actual_minutes: r.actual_minutes,
+      pushups_done: r.pushups_done,
+      squats_done: r.squats_done
     });
     setShowSummary(false);
     // Reset for next session

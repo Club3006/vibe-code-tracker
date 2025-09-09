@@ -6,6 +6,8 @@ export type SummaryResult = {
   completed: Partial<Record<TaskKey, boolean>>;
   counts:    { inbounds: number; outbounds: number };
   actual_minutes: number;
+  pushups_done: number;
+  squats_done: number;
 };
 
 export default function SessionSummary({
@@ -21,6 +23,8 @@ export default function SessionSummary({
   const [yn, setYn] = useState<Partial<Record<TaskKey, boolean>>>({});
   const [inb, setInb] = useState(0);
   const [outb, setOutb] = useState(0);
+  const [pushups, setPushups] = useState(0);
+  const [squats, setSquats] = useState(0);
 
   if (!open) return null;
 
@@ -49,6 +53,10 @@ export default function SessionSummary({
             }
             return null;
           })}
+          <div className="grid grid-cols-2 gap-4">
+            <NumberStepper label="Pushups Done" value={pushups} onChange={setPushups} />
+            <NumberStepper label="Squats Done" value={squats} onChange={setSquats} />
+          </div>
           <label className="block">
             <div className="vc-label">Actual time (minutes)</div>
             <input className="vc-input" type="number" value={actual}
@@ -60,7 +68,7 @@ export default function SessionSummary({
           <button className="vc-badge" onClick={onClose}>Cancel</button>
           <button
             className="vc-btn"
-            onClick={() => onSubmit({ completed: yn, counts: { inbounds: inb, outbounds: outb }, actual_minutes: actual })}
+            onClick={() => onSubmit({ completed: yn, counts: { inbounds: inb, outbounds: outb }, actual_minutes: actual, pushups_done: pushups, squats_done: squats })}
           >Save Session</button>
         </div>
       </div>
