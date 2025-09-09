@@ -6,7 +6,7 @@ import TaskChecklist from "./TaskChecklist";
 import PomodoroTimer from "./PomodoroTimer";
 import SessionSummary, { type SummaryResult } from "./SessionSummary";
 
-export default function InlineFocusSession() {
+export default function InlineFocusSession({ onSaved }: { onSaved?: () => void }) {
   const [uid, setUid] = useState<string>("");
   const [date] = useState(todayKey());
   const [chosen, setChosen] = useState<TaskKey[]>([]);
@@ -55,6 +55,9 @@ export default function InlineFocusSession() {
         squats_done: r.squats_done
       });
       console.log('✅ finalizeSession completed successfully');
+      
+      // Refresh dashboard data
+      onSaved?.();
     } catch (error) {
       console.error('❌ Error in finalizeSession:', error);
     }

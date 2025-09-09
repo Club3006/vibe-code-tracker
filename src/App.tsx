@@ -42,7 +42,11 @@ export default function App() {
           
           {/* Right side - Focus Session */}
           <div className="col-span-12 lg:col-span-6 h-full">
-            <InlineFocusSession />
+            <InlineFocusSession onSaved={async () => {
+              if (!uid) return;
+              const [d, s] = await Promise.all([loadDaily(uid, date), loadStreak(uid)]);
+              setDaily(d); setStreak(s);
+            }} />
           </div>
           
           {/* Dashboard card - full width */}
