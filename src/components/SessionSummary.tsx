@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PRESET_TASKS, type TaskKey } from "../lib/sessions";
 import NumberStepper from "./NumberStepper";
 
@@ -26,10 +26,33 @@ export default function SessionSummary({
   const [pushups, setPushups] = useState("");
   const [squats, setSquats] = useState("");
 
+  // Handle Escape key to close modal
+  useEffect(() => {
+    if (!open) return;
+    
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        console.log('🚫 Escape key pressed');
+        onClose();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex items-center justify-center p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          console.log('🚫 Modal backdrop clicked');
+          onClose();
+        }
+      }}
+    >
       <div className="vc-card w-full max-w-lg border-2 border-indigo-400/50 bg-indigo-500/20 shadow-indigo-500/20 shadow-2xl">
         <h3 className="vc-h2">Session Summary</h3>
         <p className="vc-help mb-3">Mark results for this focus block.</p>
@@ -71,7 +94,10 @@ export default function SessionSummary({
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
-          <button className="vc-badge" onClick={onClose}>Cancel</button>
+          <button className="vc-badge" onClick={() => {
+            console.log('🚫 Cancel button clicked');
+            onClose();
+          }}>Cancel</button>
           <button
             className="vc-btn"
             onClick={() => {

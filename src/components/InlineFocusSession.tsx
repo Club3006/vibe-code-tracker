@@ -127,7 +127,10 @@ export default function InlineFocusSession({ onSaved }: { onSaved?: () => void }
         open={showSummary}
         chosen={chosen}
         expected={Number(expected)}
-        onClose={() => setShowSummary(false)}
+        onClose={() => {
+          console.log('🚫 SessionSummary onClose called');
+          setShowSummary(false);
+        }}
         onSubmit={saveResults}
       />
     </div>
