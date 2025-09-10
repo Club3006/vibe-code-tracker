@@ -25,6 +25,16 @@ export default function SessionSummary({
   const [outb, setOutb] = useState(0);
   const [pushups, setPushups] = useState("");
   const [squats, setSquats] = useState("");
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = () => {
+    if (isClosing) return; // Prevent multiple rapid clicks
+    setIsClosing(true);
+    console.log('🚫 Closing modal...');
+    onClose();
+    // Reset closing state after a short delay
+    setTimeout(() => setIsClosing(false), 100);
+  };
 
   // Handle Escape key to close modal
   useEffect(() => {
@@ -33,13 +43,25 @@ export default function SessionSummary({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         console.log('🚫 Escape key pressed');
-        onClose();
+        handleClose();
       }
     };
     
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [open, onClose]);
+
+  // Reset form state when modal closes
+  useEffect(() => {
+    if (!open) {
+      setActual("");
+      setYn({});
+      setInb(0);
+      setOutb(0);
+      setPushups("");
+      setSquats("");
+    }
+  }, [open]);
 
   if (!open) return null;
 
@@ -49,7 +71,7 @@ export default function SessionSummary({
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           console.log('🚫 Modal backdrop clicked');
-          onClose();
+          handleClose();
         }
       }}
     >
@@ -94,10 +116,7 @@ export default function SessionSummary({
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
-          <button className="vc-badge" onClick={() => {
-            console.log('🚫 Cancel button clicked');
-            onClose();
-          }}>Cancel</button>
+          <button className="vc-badge" onClick={handleClose}>Cancel</button>
           <button
             className="vc-btn"
             onClick={() => {
